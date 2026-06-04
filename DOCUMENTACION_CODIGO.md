@@ -16,29 +16,7 @@ Es un agente ligero (emula al **Verifier** de un sistema STARK) que valida la pr
 - **`CommitValidator`**: Validar que el dataset auditado coincida con el compromiso hash enviado por el Cliente.
 - **`AIREngine`**: Evaluar un conjunto de **Restricciones Intermedias Algebraicas (AIR)** sobre la traza de ejecución provista.
 
----
-
-## Restricciones Aritméticas (AIR - Algebraic Intermediate Representation)
-
-El Verificador comprueba la corrección matemática de la traza de ejecución evaluando tres tipos de restricciones:
-
-### A. Restricciones de Frontera Inicial (Boundary Constraints)
-Asegura que el modelo inició en un estado predefinido y no sesgado:
-$$\mathbf{w}_0 = \mathbf{0}, \quad b_0 = 0$$
-
-### B. Restricciones de Transición (Transition Constraints)
-Para cada iteración $t \in [0, T-1]$, el Verificador evalúa:
-1. **Combinación Lineal**: $\mathbf{z}^{(t)} = \mathbf{X}\mathbf{w}^{(t)} + b^{(t)}$
-2. **Activación**: $\hat{\mathbf{y}}^{(t)} = \sigma(\mathbf{z}^{(t)})$ donde $\sigma(z) = \frac{1}{1 + e^{-z}}$
-3. **Cálculo de Gradientes**:
-   $$\mathbf{g}_w^{(t)} = \frac{1}{n} \mathbf{X}^T (\hat{\mathbf{y}}^{(t)} - \mathbf{y})$$
-   $$g_b^{(t)} = \frac{1}{n} \sum_{i=1}^n (\hat{y}_i^{(t)} - y_i)$$
-4. **Regla de Transición**: Actualización de los pesos usando la tasa de aprendizaje $\eta$:
-   $$\mathbf{w}^{(t+1)} = \mathbf{w}^{(t)} - \eta \, \mathbf{g}_w^{(t)}$$
-   $$b^{(t+1)} = b^{(t)} - \eta \, g_b^{(t)}$$
-5. **Continuidad de Memoria**: El estado inicial del paso $t+1$ debe coincidir exactamente con el estado final calculado en el paso $t$.
-
-### C. Restricciones de Frontera Final (Boundary Constraints)
+### Restricciones de Frontera Final (Boundary Constraints)
 Valida que los pesos y sesgo finales del modelo entregado por el CSP coincidan con la última fila de la traza de ejecución auditada.
 
 ---
