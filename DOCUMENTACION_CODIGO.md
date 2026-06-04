@@ -1,32 +1,3 @@
-# Documentación Técnica: Entrenamiento Verificable de Regresión Logística (zkML / STARKs)
-
-Este repositorio contiene la implementación y simulación en Python de un sistema de **Entrenamiento Verificable (Verifiable Training)** para Regresión Logística, inspirado en el funcionamiento de los sistemas **zk-STARK** (Zero-Knowledge Succinct Non-Interactive Argument of Knowledge) aplicados a Aprendizaje Automático (zkML).
-
-El objetivo es permitir a un **Cliente** delegar el cómputo del entrenamiento de un modelo a un proveedor en la nube (**CSP**) potencialmente malicioso o no confiable (*untrusted*), y verificar de manera ultra rápida y en tiempo constante si el CSP ejecutó el entrenamiento de manera honesta y correcta sobre los datos originales.
-
----
-
-## 🏛️ Arquitectura del Sistema
-
-La arquitectura está compuesta por tres actores principales con responsabilidades específicas:
-
-```
-                  ┌─────────────────────────────────────────────────────┐
-                  │                   CLIENTE                           │
-                  │  DataPrep ──► DataCommit ──► ClientControl          │
-                  │       │              │                 ▲            │
-                  │       │ (X, y)       │ hash_c          │ veredicto  │
-                  └───────┼──────────────┼─────────────────┼────────────┘
-                          │              │                 │
-                          ▼              ▼                 │
-                  ┌───────────────┐      │      ┌──────────┴───────────┐
-                  │     CSP       │      │      │     VERIFICADOR      │
-                  │ TrainingEngine│      │      │  CommitValidator     │
-                  │ TraceGenerator│      └─────►│  AIREngine           │
-                  │ ProverMock    │─────────────►│                     │
-                  └───────────────┘  traza JSON  └─────────────────────┘
-```
-
 ### 1. Cliente (Client)
 Es el propietario de los datos de entrenamiento ($\mathbf{X}$, $\mathbf{y}$). Sus tareas son:
 - **`DataPrep`**: Preparar las características y etiquetas.
@@ -47,7 +18,7 @@ Es un agente ligero (emula al **Verifier** de un sistema STARK) que valida la pr
 
 ---
 
-## 📐 Restricciones Aritméticas (AIR - Algebraic Intermediate Representation)
+## Restricciones Aritméticas (AIR - Algebraic Intermediate Representation)
 
 El Verificador comprueba la corrección matemática de la traza de ejecución evaluando tres tipos de restricciones:
 
@@ -72,25 +43,8 @@ Valida que los pesos y sesgo finales del modelo entregado por el CSP coincidan c
 
 ---
 
-## 📂 Archivos del Código
+## Archivos del Código
 
 * [toy_verifiable_training.py](file:///home/portela07/Projects/T%C3%A9sis/seccion2/verifiable_training_stark/toy_verifiable_training.py): Script de Python auto-contenido que implementa las clases `Client`, `CloudServiceProvider`, y `Verifier`, y ejecuta la demostración.
 * [toy_execution_trace.json](file:///home/portela07/Projects/T%C3%A9sis/seccion2/verifiable_training_stark/toy_execution_trace.json): Estructura en formato JSON con la traza de ejecución detallada generada en el entrenamiento.
 * [toy_execution_trace.csv](file:///home/portela07/Projects/T%C3%A9sis/seccion2/verifiable_training_stark/toy_execution_trace.csv): Representación tabular de la traza para auditorías matriciales rápidas.
-
----
-
-## 🚀 Instrucciones de Ejecución
-
-Para correr la demostración interactiva que simula tanto un entrenamiento honesto como una detección de fraude en la traza:
-
-1. Asegúrate de tener instalado `numpy`:
-   ```bash
-   pip install numpy
-   ```
-2. Ejecuta el archivo principal:
-   ```bash
-   python3 toy_verifiable_training.py
-   ```
-
-El programa imprimirá en la terminal el progreso de los actores y los resultados de ambas auditorías (éxito en entrenamiento honesto y detección de anomalía en traza maliciosa).
