@@ -1,0 +1,17 @@
+# Ignore LaTeX source and compilation/auxiliary files
+verifiable_training_stark.tex
+verifiable_training_stark.pdf
+*.aux
+*.fdb_latexmk
+*.fls
+*.log
+*.out
+*.synctex.gz
+
+# Ignore original README and academic diagram (not needed for code)
+README.md
+diagrama_actores.png
+
+# Ignore Python cache
+__pycache__/
+*.pyc
